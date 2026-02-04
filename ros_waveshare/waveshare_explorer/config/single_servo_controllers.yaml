@@ -1,0 +1,20 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # Controller type for simple position commands
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController # Correct type
+
+# Parameters for controllers
+joint_state_broadcaster:
+  ros__parameters: {} # Defaults are usually fine
+
+forward_position_controller:
+  ros__parameters:
+    joints: # Add this section
+      - servo_joint # Specify the joint name
+    interface_name: position # Specify the command interface type

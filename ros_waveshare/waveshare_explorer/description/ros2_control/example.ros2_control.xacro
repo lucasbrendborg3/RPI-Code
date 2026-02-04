@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="example_ws_ros2_control" params="name prefix">
+
+        <ros2_control name="${name}" type="system">
+            <hardware>
+                <plugin>waveshare_ros2_control_plugin/WaveshareHardwareInterface</plugin>
+                <param name="example_param_hw_start_duration_sec">0</param>
+                <param name="example_param_hw_stop_duration_sec">3.0</param>
+                <param name="example_param_hw_slowdown">100</param>
+                <!-- MY ADD-->
+                <!-- REMOVED THE VEL INTERFACE AND ADDED POS TO THE ARM -->
+                <param name="serial_port">/dev/ttyACM0</param> 
+                <param name="baud_rate">1000000</param> 
+
+            </hardware>
+        
+            <joint name="${prefix}joint1">
+                <param name="id">4</param>
+                <param name="type">pos</param>
+                <param name="offset">1.570796</param>
+                <command_interface name="position">
+                    <param name="min">-1.570796</param>
+                    <param name="max">1.570796</param>
+                </command_interface>
+                <!-- 
+                <command_interface name="velocity">
+                    <param name="min">-9.2</param>
+                    <param name="max">9.2</param>
+                </command_interface>
+                -->
+
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="torque"/>
+                <state_interface name="temperature"/>
+
+                
+            </joint>
+
+            <joint name="${prefix}joint2">
+                <param name="id">5</param>
+                <param name="type">pos</param>
+                <param name="offset">1.570796</param>
+                <command_interface name="position">
+                    <param name="min">-1.570796</param>
+                    <param name="max">1.570796</param>
+                </command_interface>
+
+                <!--
+                <command_interface name="velocity">
+                    <param name="min">-9.2</param>
+                    <param name="max">9.2</param>
+                </command_interface>
+                -->
+
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="torque"/>
+                <state_interface name="temperature"/>
+            </joint>
+
+            <joint name="${prefix}joint3">
+                <param name="id">6</param>
+                <param name="type">pos</param>
+                <param name="offset">1.570796</param>
+                <command_interface name="position">
+                    <param name="min">-1.570796</param>
+                    <param name="max">1.570796</param>
+                </command_interface>
+                <!--
+                <command_interface name="velocity">
+                    <param name="min">-9.2</param>
+                    <param name="max">9.2</param>
+                </command_interface>
+                -->
+
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="torque"/>
+                <state_interface name="temperature"/>
+            </joint>
+
+            <joint name="${prefix}gripper_joint">
+                <param name="id">7</param>
+                <param name="type">pos</param>
+                <param name="offset">0.0</param>
+                <command_interface name="position">
+                    <param name="min">-0.5</param>
+                    <param name="max">0.5</param>
+                </command_interface>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="torque"/>
+                <state_interface name="temperature"/>
+            </joint>
+
+        </ros2_control> 
+
+        
+
+    </xacro:macro>
+
+</robot>

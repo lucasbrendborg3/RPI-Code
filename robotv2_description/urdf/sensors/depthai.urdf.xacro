@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="depthai_camera" params="parent_link prefix">
+
+    <!-- Camera body joint - attached to the parent link -->
+    <joint name="${prefix}oak_rgb_camera_joint" type="fixed">
+        <parent link="${parent_link}"/>
+        <child link="${prefix}oak_rgb_camera_frame"/>
+        <!-- Edit origin tag to reposition camera -->
+        <origin xyz="0 -0.1 0.03" rpy="0 -${pi/2} ${pi/2}"/>
+    </joint>
+
+    <!-- Main camera body -->
+    <link name="${prefix}oak_rgb_camera_frame">
+        <visual name="camera_body_visual">
+            <geometry>
+                <box size="0.03 0.08 0.02"/>
+            </geometry>
+            <material name="RobotBlue"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </visual>
+        <visual name="camera_lens_visual">
+            <origin xyz="0.015 0 0" rpy="0 ${pi/2} 0"/>
+            <geometry>
+                <cylinder radius="0.005" length="0.005"/>
+            </geometry>
+            <material name="Black">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.03 0.08 0.02"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+        <!-- GAZEBO SIMULATION SENSOR TAG (optional, can be left as is) -->
+        <sensor name="${prefix}oak_rgb_camera_sensor" type="camera">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>5</update_rate>
+            <camera>
+                <horizontal_fov>1.08</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>100</far>
+                </clip>
+            </camera>
+            <topic>${prefix}/camera</topic>
+            <gz_frame_id>${prefix}oak_rgb_camera_optical_frame</gz_frame_id>
+        </sensor>
+    </link>
+
+    <gazebo reference="${prefix}oak_rgb_camera_frame">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <!-- Optical frame for camera -->
+    <joint name="${prefix}oak_rgb_camera_optical_joint" type="fixed">
+        <parent link="${prefix}oak_rgb_camera_frame"/>
+        <child link="${prefix}oak_rgb_camera_optical_frame"/>
+        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+    <link name="${prefix}oak_rgb_camera_optical_frame"/>
+
+  </xacro:macro>
+
+</robot>

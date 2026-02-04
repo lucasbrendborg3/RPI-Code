@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="single_servo_ros2_control" params="name prefix">
+        <ros2_control name="${name}" type="system">
+            <hardware>
+                <!-- Your hardware plugin -->
+                <plugin>waveshare_ros2_control_plugin/WaveshareHardwareInterface</plugin>
+                <!-- *** IMPORTANT: Verify these parameters match your setup *** -->
+                <!-- THESE PARAMETERS ARE HARDCODED VERIFIED BEFORE TEST -->
+
+                <!-- Example parameters for the hardware interface (NOT NESSESARLY NEEDED DO TO: waveshare_servos.hpp (58-75))-->
+                <!-- still keep do the easier understandment of main code and for fail control-->
+                <param name="serial_port">/dev/ttyACM0</param> 
+                <param name="baud_rate">1000000</param> 
+            </hardware>
+
+            <!-- Define the single joint -->
+            <joint name="${prefix}servo_joint">
+                <!-- Map this logical joint to the physical servo with ID 4 -->
+                <param name="id">4</param> 
+                <param name="type">pos</param>  <!-- Add this line -->
+                <!-- Define command/state interfaces. Adjust min/max if needed -->
+                <command_interface name="position">
+                    <param name="min">-1.570796</param> <!-- -90 degrees -->
+                    <param name="max">1.570796</param> <!-- +90 degrees -->
+                </command_interface>
+                <!-- Add velocity command if your hardware/controller supports it -->
+                <!-- <command_interface name="velocity">
+                    <param name="min">-9.2</param> 
+                    <param name="max">9.2</param> 
+                </command_interface> -->
+
+                <!-- IS NOT SUPPORTED YET NEED FIXING INT "waveshare_servos.cpp" -->
+                <!-- Add effort command if your hardware/controller supports it -->
+                <!-- <command_interface name="effort">
+                    <param name="min">-5.0</param>
+                    <param name="max">5.0</param>
+                </command_interface> -->
+                
+                <!-- Define state interfaces provided by your hardware -->
+                <state_interface name="position"/>
+                <state_interface name="velocity"/> 
+                <state_interface name="torque"/>    <!-- uncommented -->
+                <state_interface name="temperature"/>   <!-- uncommented -->
+            </joint>
+        </ros2_control>
+    </xacro:macro>
+
+</robot>

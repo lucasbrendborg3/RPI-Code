@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="single_servo_test_robot">
+
+    <!-- Include the ros2_control definition --> <!-- REMEBER TO CHANGE IF FILESTRUCTURE IS CHANGE-->
+    <xacro:include filename="$(find waveshare_explorer)/description/ros2_control/single_servo.ros2_control.xacro"/>
+
+    <!-- Materials -->
+    <material name="grey"><color rgba="0.5 0.5 0.5 1"/></material>
+    <material name="blue"><color rgba="0.1 0.1 0.8 1"/></material>
+
+    <!-- Base Link -->
+    <link name="base_link">
+        <visual>
+            <geometry><box size="0.05 0.05 0.05"/></geometry>
+            <material name="grey"/>
+        </visual>
+        <collision>
+            <geometry><box size="0.05 0.05 0.05"/></geometry>
+        </collision>
+    </link>
+
+    <!-- Servo Link -->
+    <link name="servo_link">
+        <visual>
+            <geometry><cylinder length="0.06" radius="0.02"/></geometry>
+            <origin xyz="0 0 0.03" rpy="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry><cylinder length="0.06" radius="0.02"/></geometry>
+             <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <!-- Servo Joint (Matches name in ros2_control xacro) -->
+    <joint name="servo_joint" type="revolute">
+        <parent link="base_link"/>
+        <child link="servo_link"/>
+        <origin xyz="0 0 0.025" rpy="0 0 0"/> 
+        <axis xyz="0 0 1"/> 
+        <limit lower="-1.570796" upper="1.570796" effort="10" velocity="1.0"/> 
+    </joint>
+
+    <!-- Instantiate the ros2_control macro -->
+    <xacro:single_servo_ros2_control name="WaveshareServoSystem" prefix=""/> 
+
+</robot>

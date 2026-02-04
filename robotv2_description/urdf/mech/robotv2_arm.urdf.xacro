@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="robotv2_arm" params="base_link flange_link prefix *origin">
+    
+    <!-- All your links with ONLY inertial properties -->
+    <link name="${prefix}link0}">
+      <inertial>
+        <mass value="1.366"/>
+        <inertia ixx="0.0046" iyy="0.0028" izz="0.0028" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+
+    <link name="${prefix}link1">
+      <inertial>
+        <mass value="0.7"/>
+        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+    
+    <link name="${prefix}link2">
+      <inertial>
+        <mass value="0.9"/>
+        <inertia ixx="0.005" iyy="0.002" izz="0.006" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+    
+    <!-- Continue for all links... -->
+    <link name="${prefix}link3">
+      <inertial>
+        <mass value="0.4"/>
+        <inertia ixx="0.0003" iyy="0.0007" izz="0.0009" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+    
+    <link name="${prefix}link4">
+      <inertial>
+        <mass value="0.3"/>
+        <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+    
+    <link name="${prefix}link5">
+      <inertial>
+        <mass value="0.05"/>
+        <inertia ixx="0.00001" iyy="0.00001" izz="0.00001" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+    
+    <link name="${prefix}${flange_link}">
+      <inertial>
+        <mass value="0.001"/>
+        <inertia ixx="0.000001" iyy="0.000001" izz="0.000001" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- All your joints with EXACT same kinematics as main PC -->
+    <joint name="${prefix}joint_base_to_world" type="fixed">
+      <origin xyz="0 0 0.009" rpy="0 0 0"/>
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}link0"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
+
+    <joint name="${prefix}joint1" type="revolute">
+      <parent link="${prefix}link0"/>
+      <child link="${prefix}link1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 -1"/>
+      <limit lower="-3.12" upper="3.12" effort="100" velocity="1.0"/>
+    </joint>
+
+    <joint name="${prefix}joint2" type="revolute">
+      <parent link="${prefix}link1"/>
+      <child link="${prefix}link2"/>
+      <origin xyz="0 0.045 0.193" rpy="0 -1.5708 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-0.87" upper="1.83" effort="100" velocity="1.0"/>
+    </joint>
+
+    <joint name="${prefix}joint3" type="revolute">
+      <parent link="${prefix}link2"/>
+      <child link="${prefix}link3"/>
+      <origin xyz="0.3 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-1.75" upper="1.75" effort="50" velocity="1.0"/>
+    </joint>
+
+
+    <!-- Waveshare -->
+    <joint name="${prefix}joint4" type="revolute">
+      <parent link="${prefix}link3"/>
+      <child link="${prefix}link4"/>
+      <origin xyz="0.2971 -0.0001 0" rpy="0 1.5708 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.09" upper="2.09" effort="2" velocity="1.0"/>
+    </joint>
+
+    <joint name="${prefix}joint5" type="revolute">
+      <parent link="${prefix}link4"/>
+      <child link="${prefix}link5"/>
+      <origin xyz="0 0 0.037" rpy="1.5708 -1.5708 0"/>
+      <axis xyz="0 0 -1"/>
+      <limit lower="-2.09" upper="2.09" effort="2" velocity="1.0"/>
+    </joint>
+
+    <joint name="${prefix}joint6" type="revolute">
+      <origin xyz="0.0731 0 0" rpy="-1.5708 0 -1.5708"/>
+      <parent link="${prefix}link5"/>
+      <child link="${prefix}${flange_link}"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.09" upper="2.09" effort="2" velocity="1.0"/>
+  </xacro:macro>
+
+</robot>

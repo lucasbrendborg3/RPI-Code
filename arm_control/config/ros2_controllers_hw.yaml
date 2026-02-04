@@ -1,0 +1,73 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    gripper_action_controller:
+      type: position_controllers/GripperActionController
+
+# Joint state broadcaster - no parameters needed
+joint_state_broadcaster:
+  ros__parameters:
+
+#ADD BACK JOINTS HERE if it fails to start
+    joints:
+      - joint1  # ODrive joints (0-2)
+      - joint2
+      - joint3
+      - joint4  # Waveshare joints (3-5)
+      - joint5
+      - joint6
+      - gripper_controller  # Gripper joint
+    
+arm_controller:
+  ros__parameters:
+    joints:
+      - joint1  # ODrive joints (0-2)
+      - joint2
+      - joint3
+      - joint4  # Waveshare joints (3-5)
+      - joint5
+      - joint6
+
+    # Set the joints to be controlled
+    command_interfaces:
+      - position
+    
+    # Feedback interfaces for the controller
+    state_interfaces:
+      - position
+      - velocity
+
+    # Controller type (true = open loop, false = closed loop)
+    open_loop_control: false
+
+    # Allow integration in goal trajectories (velocity and acceleration) if only position is specified
+    allow_integration_in_goal_trajectories: true
+
+    # Allow non-zero velocity at the end of the trajectory
+    allow_nonzero_velocity_at_trajectory_end: true
+
+    # Additional parameters for stability
+    action_monitor_rate: 100.0  # 100Hz like main robot
+    allow_partial_joints_goal: false
+    
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.6
+
+# GRIPPER CONTROLLER - matches main PC exactly
+gripper_action_controller:
+  ros__parameters:
+    joint: gripper_controller
+    action_monitor_rate: 20.0  # 20Hz as requested
+    goal_tolerance: 0.01
+    max_effort: 2.0
+    allow_stalling: false
+    stall_velocity_threshold: 0.01
+    stall_timeout: 1.0

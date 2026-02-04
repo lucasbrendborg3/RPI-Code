@@ -1,0 +1,9 @@
+<library path="waveshare_ros2_control_plugin">
+  <class name="waveshare_ros2_control_plugin/WaveshareHardwareInterface"
+         type="waveshare_ros2_control::WaveshareHardwareInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      a ros2_control package for Waveshare ST bus servo motors.
+    </description>
+  </class>
+</library>

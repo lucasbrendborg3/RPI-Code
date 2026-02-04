@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="robotv2">
+  
+  <!-- ===================== PROPERTIES ===================== -->  
+  <xacro:arg name="robot_name" default="robotv2"/>
+  <xacro:arg name="add_world" default="true"/>
+  <xacro:arg name="base_link" default="base_link"/>
+  <xacro:arg name="base_type" default="base"/>
+  <xacro:arg name="flange_link" default="link6"/>
+  <xacro:arg name="use_gripper" default="true"/>
+  <xacro:arg name="gripper_type" default="gripper"/>
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="use_gazebo" default="false"/>
+
+  <!-- Add world link -->
+  <xacro:if value="$(arg add_world)">
+    <link name="world"/>
+    <joint name="$(arg prefix)virtual_joint" type="fixed">
+        <parent link="world"/>
+        <child link="$(arg prefix)$(arg base_link)"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+  </xacro:if>
+
+  <!-- Include base (WITHOUT visual components) -->
+  <xacro:include filename="$(find robotv2_description)/urdf/mech/base.urdf.xacro"/>
+  <xacro:base
+      base_link="$(arg base_link)"
+      prefix="$(arg prefix)"/>
+
+  <!-- Include arm (WITHOUT visual components) -->
+  <xacro:include filename="$(find robotv2_description)/urdf/mech/robotv2_arm.urdf.xacro"/>
+  <xacro:robotv2_arm
+    base_link="$(arg base_link)"
+    flange_link="$(arg flange_link)"
+    prefix="$(arg prefix)">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:robotv2_arm>
+
+  <!-- Include gripper (WITHOUT visual components) -->
+  <xacro:if value="$(arg use_gripper)">
+    <xacro:include filename="$(find robotv2_description)/urdf/mech/gripper.urdf.xacro"/>
+    <xacro:gripper
+        parent="$(arg flange_link)"
+        prefix="$(arg prefix)">
+        <origin xyz="0 0 0.01" rpy="0 0 0"/>
+    </xacro:gripper>
+  </xacro:if>
+
+  <!-- Include ONLY the hardware control -->
+  <xacro:include filename="$(find robotv2_description)/urdf/control/robotv2_ros2_control.urdf.xacro" />
+  <xacro:robotv2_ros2_control
+    prefix="$(arg prefix)"
+    flange_link="$(arg flange_link)"
+    use_gazebo="false"/>
+
+</robot>
