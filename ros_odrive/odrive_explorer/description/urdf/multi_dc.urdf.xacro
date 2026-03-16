@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="odrive_robot">
+
+    <!-- Include the ros2_control definition -->
+    <xacro:include filename="$(find odrive_explorer)/description/ros2_control/multi_dc_ros2_control.xacro"/>
+
+    <!-- Materials -->
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+    <material name="blue">
+        <color rgba="0.1 0.1 0.8 1"/>
+    </material>
+    <material name="red">
+        <color rgba="0.8 0.1 0.1 1"/>
+    </material>
+
+    <!-- Base Link -->
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0.15"/>
+            <geometry>
+                <box size="0.2 0.2 0.3"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.15"/>
+            <geometry>
+                <box size="0.2 0.2 0.3"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- First Link -->
+    <link name="link_1">
+        <visual>
+            <origin xyz="0 0 0.15"/>
+            <geometry>
+                <box size="0.1 0.1 0.3"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.15"/>
+            <geometry>
+                <box size="0.1 0.1 0.3"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- Second Link -->
+    <link name="link_2">
+        <visual>
+            <origin xyz="0 0 0.15"/>
+            <geometry>
+                <box size="0.1 0.1 0.3"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.15"/>
+            <geometry>
+                <box size="0.1 0.1 0.3"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- Third Link -->
+    <link name="link_3">
+        <visual>
+            <origin xyz="0 0 0.05"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.1"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.05"/>
+            <geometry>
+                <cylinder length="0.1" radius="0.1"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- Joint names must match what's in your controller configuration -->
+    <joint name="joint_0" type="revolute">
+        <axis xyz="0 0 1"/>
+        <limit effort="10.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+        <origin xyz="0 0 0.3"/>
+        <parent link="base_link"/>
+        <child link="link_1"/>
+    </joint>
+
+    <joint name="joint_1" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="10.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+        <origin xyz="0 0 0.3"/>
+        <parent link="link_1"/>
+        <child link="link_2"/>
+    </joint>
+
+    <joint name="joint_2" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="10.0" lower="-3.14159" upper="3.14159" velocity="1.0"/>
+        <origin xyz="0 0 0.3"/>
+        <parent link="link_2"/>
+        <child link="link_3"/>
+    </joint>
+
+    <!-- Instantiate the ros2_control macro -->
+    <xacro:multi_revolute_ros2_control name="MultiRevoluteSystem" prefix=""/>
+</robot>

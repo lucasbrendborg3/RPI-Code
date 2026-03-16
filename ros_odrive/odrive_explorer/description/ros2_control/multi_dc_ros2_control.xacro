@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="multi_revolute_ros2_control" params="name prefix">
+    <ros2_control name="MultiRevoluteSystem" type="system">
+      <hardware>
+          <plugin>odrive_ros2_control_plugin/ODriveHardwareInterface</plugin>
+          <param name="can">can0</param>
+      </hardware>
+
+        <joint name="${prefix}joint_0">
+            <param name="node_id">0</param>
+            <param name="type">pos</param>
+            <command_interface name="position">
+                <param name="min">-3.14159</param> <!-- -180 deg -->
+                <param name="max">3.14159</param>  <!-- +180 deg -->
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+        <joint name="${prefix}joint_1">
+            <param name="node_id">1</param>
+            <param name="type">pos</param>
+            <command_interface name="position">
+                <param name="min">-3.14159</param> <!-- -180 deg -->
+                <param name="max">3.14159</param>  <!-- +180 deg -->
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+        <joint name="${prefix}joint_2">
+            <param name="node_id">2</param>
+            <param name="type">pos</param>
+            <command_interface name="position">
+                <param name="min">-3.14159</param> <!-- -180 deg -->
+                <param name="max">3.14159</param>  <!-- +180 deg -->
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+    </ros2_control>
+  </xacro:macro>
+</robot>
