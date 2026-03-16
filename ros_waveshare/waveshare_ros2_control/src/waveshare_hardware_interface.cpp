@@ -410,10 +410,28 @@ double WaveshareHardwareInterface::get_velocity(int ID)
 
 double WaveshareHardwareInterface::get_torque(int ID)
 {
-    // ReadCurrent(ID) return unitless value, multiply by static current (6mA)
-    int current = sm_st.ReadCurrent(ID) * 6.0 / 1000.0;
-    double torque = current * KT_;
+// ST3020 returns Load as a value between -1000 and 1000.
+    // We use ReadLoad instead of ReadCurrent.
+    int16_t load_raw = sm_st.ReadLoad(ID);
+    
+    // If the read fails (returns -1), return 0.0 to avoid spikes
+    if (load_raw == -1) {
+        return 0.0;
+    }
+
+    // Convert the raw load (-1000 to 1000) into a standard torque unit.
+    // If you just want to see *any* data, returning the raw load is fine for now.
+    // Otherwise, normalize it (e.g. 1000 = 100% torque).
+    
+    double torque = static_cast<double>(load_raw) / 1000.0; 
+    
+    // Optional: Multiply by your torque constant (KT_) if you have one calibrated,
+    // otherwise just returning the normalized -1.0 to 1.0 range is standard for ROS.
     return torque;
+    // ReadCurrent(ID) return unitless value, multiply by static current (6mA)
+//    int current = sm_st.ReadCurrent(ID) * 6.0 / 1000.0;
+ //   double torque = current * KT_;
+  //  return torque;
 }
 
 double WaveshareHardwareInterface::get_temperature(int ID)
