@@ -27,12 +27,12 @@ def generate_launch_description():
     # Base nodes for headless operation
     nodes = [
         # ROS2 Control Node (hardware interface)
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='world_to_base_link',
-            arguments=['0', '0', '0', '0', '0', '0', 'world', 'base_link']
-        ),
+        #Node(
+        #    package='tf2_ros',
+        #    executable='static_transform_publisher',
+        #    name='world_to_base_link',
+        #    arguments=['0', '0', '0', '0', '0', '0', 'world', 'base_link']
+        #),
         
         Node(
             package="controller_manager",
@@ -54,6 +54,10 @@ def generate_launch_description():
                 {"robot_description": robot_description_content},
                 {'use_sim_time': False}
             ],
+            remappings=[
+                ('/tf', '/pi_internal/tf'),
+                ('/tf_static', '/pi_internal/tf_static')
+            ]
         ),
         
         # Joint State Broadcaster (immediate start)

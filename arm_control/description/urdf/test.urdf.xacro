@@ -1,15 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="test">
 
-  <!-- Include the ros2_control definition -->
   <xacro:include filename="$(find arm_control)/description/ros2_control/hardware_ros2_control.xacro"/>
   
-  <!-- Materials -->
   <material name="grey"><color rgba="0.5 0.5 0.5 1"/></material>
   <material name="blue"><color rgba="0.1 0.1 0.8 1"/></material>
   <material name="red"><color rgba="0.8 0.1 0.1 1"/></material>
 
-  <!-- Base Link -->
   <link name="base_link">
     <visual>
       <geometry><box size="0.2 0.2 0.1"/></geometry>
@@ -17,7 +14,6 @@
     </visual>
   </link>
 
-  <!-- ODrive Links (joints 0-2) -->
   <link name="odrive_link_1">
     <visual>
       <origin xyz="0 0 0.15"/>
@@ -42,7 +38,6 @@
     </visual>
   </link>
 
-  <!-- Waveshare Servo Links (joints 3-5) -->
   <link name="servo_link_1">
     <visual>
       <geometry><cylinder length="0.06" radius="0.02"/></geometry>
@@ -57,14 +52,6 @@
     </visual>
   </link>
   
-  <link name="servo_link_3">
-    <visual>
-      <geometry><cylinder length="0.06" radius="0.02"/></geometry>
-      <material name="red"/>
-    </visual>     
-  </link>
-
-  <!-- Gripper Link -->
   <link name="gripper_link">
       <visual>
           <geometry><box size="0.02 0.1 0.02"/></geometry>
@@ -77,9 +64,6 @@
       </collision>
   </link>
   
-  <!-- FIXED JOINT LIMITS TO MATCH MAIN PC -->
-  
-  <!-- Joint 1: MATCHED limits -->
   <joint name="joint1" type="revolute">
     <parent link="base_link"/>
     <child link="odrive_link_1"/>
@@ -88,7 +72,6 @@
     <limit effort="10" lower="-3.12" upper="3.12" velocity="1"/>  
   </joint>
   
-  <!-- Joint 2: MATCHED limits -->
   <joint name="joint2" type="revolute">
     <parent link="odrive_link_1"/>
     <child link="odrive_link_2"/>
@@ -97,7 +80,6 @@
     <limit effort="10" lower="-1.05" upper="1.92" velocity="1"/>  
   </joint>
 
-  <!-- Joint 3: MATCHED limits -->
   <joint name="joint3" type="revolute">
     <parent link="odrive_link_2"/>
     <child link="odrive_link_3"/>
@@ -106,7 +88,6 @@
     <limit effort="10" lower="-2.27" upper="2.27" velocity="1"/>  
   </joint>
   
-  <!-- Joint 4: MATCHED limits -->
   <joint name="joint4" type="revolute">
     <parent link="base_link"/>
     <child link="servo_link_1"/>
@@ -115,7 +96,6 @@
     <limit effort="1" lower="-2.09" upper="2.09" velocity="1"/> 
   </joint>
   
-  <!-- Joint 5: MATCHED limits -->
   <joint name="joint5" type="revolute">
     <parent link="servo_link_1"/>
     <child link="servo_link_2"/>
@@ -124,22 +104,12 @@
     <limit effort="1" lower="-2.09" upper="2.09" velocity="1"/>  
   </joint>
   
-  <!-- Joint 6: MATCHED limits -->
-  <joint name="joint6" type="revolute">
-    <parent link="servo_link_2"/>
-    <child link="servo_link_3"/>
-    <origin xyz="0 0 0.1"/>
-    <axis xyz="1 0 0"/>
-    <limit effort="1" lower="-2.09" upper="2.09" velocity="1"/>
-  </joint>
-  
-  <!-- Gripper Joint: MATCHED limits -->
-  <joint name="gripper_controller" type="revolute">
-      <parent link="servo_link_3"/>
+  <joint name="gripper1" type="revolute">
+      <parent link="servo_link_2"/>
       <child link="gripper_link"/>
       <origin xyz="0 0 0.06" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit lower="-0.6" upper="0.4" effort="5" velocity="1.0"/>
+      <limit lower="-0.3" upper="0.3" effort="1" velocity="1"/>
   </joint>
 
   <xacro:arm_control/>
