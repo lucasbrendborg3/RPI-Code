@@ -20,31 +20,34 @@
         </command_interface>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
         <!-- Remove 'effort' to match main PC -->
       </joint>
       
       <joint name="joint2">
         <param name="node_id">1</param>
         <param name="type">pos</param>
-        <param name="gear_ratio">295.0</param>  <!-- Match main PC gear ratio -->
+        <param name="gear_ratio">304.6</param>  <!-- Match main PC gear ratio  prev. ratio 295.00 -->
         <command_interface name="position">
-          <param name="min">-1.05</param>  <!-- Match main PC limits -->
+          <param name="min">-0.897</param>  <!-- Match main PC limits -->
           <param name="max">1.92</param>
         </command_interface>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
 
       <joint name="joint3">
         <param name="node_id">2</param>
         <param name="type">pos</param>
-        <param name="gear_ratio">196.87</param>  <!-- Match main PC gear ratio -->
+        <param name="gear_ratio">198.0</param>  <!-- Match main PC gear ratio -->
         <command_interface name="position">
-          <param name="min">-2.27</param>  <!-- Match main PC limits -->
-          <param name="max">2.27</param>
+          <param name="min">-1.83</param>  <!-- Match main PC limits -->
+          <param name="max">1.83</param>
         </command_interface>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
+        <state_interface name="effort"/>
       </joint>
     </ros2_control>
     
@@ -60,12 +63,13 @@
       <joint name="joint4">  <!-- Fixed naming -->
         <param name="id">4</param>
         <param name="type">pos</param>
-        <param name="offset">3.141592</param>
+        <param name="offset">3.041592</param>
         <param name="gear_ratio">1.0</param> <!-- gear ratio -->
         <command_interface name="position">
           <param name="min">-2.09</param>  <!-- Match main PC limits -->
           <param name="max">2.09</param>
         </command_interface>
+        <command_interface name="velocity"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <!-- Keep hardware-specific interfaces for internal use -->
@@ -74,14 +78,15 @@
       </joint>
       
       <joint name="joint5">
-        <param name="id">5</param>
+        <param name="id">6</param>
         <param name="type">pos</param>
-        <param name="offset">3.141592</param>
+        <param name="offset">3.181592</param>
         <param name="gear_ratio">1.0</param> <!-- gear ratio -->
         <command_interface name="position">
           <param name="min">-2.09</param>
           <param name="max">2.09</param>
         </command_interface>
+        <command_interface name="velocity"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="torque"/>

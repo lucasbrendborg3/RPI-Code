@@ -2,7 +2,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import TimerAction
+from launch.actions import TimerAction, ExecuteProcess
 from launch_ros.actions import Node
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
@@ -80,6 +80,18 @@ def generate_launch_description():
                 )
             ]
         ),
+
+        TimerAction(
+            period=3.0,
+            actions=[
+                Node(
+                    package="controller_manager",
+                    executable="spawner",
+                    arguments=["waveshare_velocity_controller", "--controller-manager", "/controller_manager"],
+                    output="screen",
+                )
+            ]
+        ),
         
         # Gripper Controller (delayed start after arm controller)
         TimerAction(
@@ -90,6 +102,57 @@ def generate_launch_description():
                     executable="spawner",
                     arguments=["gripper_action_controller", "--controller-manager", "/controller_manager"],
                     output="screen",
+                ),
+            ]
+       ), 
+
+        TimerAction(
+            period=4.5,  
+            actions=[
+                Node(
+                    package="tof_sensor",
+                    executable="tof_node",
+                    output="screen",
+                ),
+            ]
+        ),
+        TimerAction(
+            period=4.7,
+            actions=[
+                Node(
+                    package="gripper_controller",
+                    executable="gripper_controller",
+                    output="screen",
+                ),
+            ]
+        ),
+        TimerAction(
+            period=9.5,  
+            actions=[
+                ExecuteProcess(
+                    cmd=[
+                        'ros2', 'topic', 'pub', 
+                        '-1',     # Publish exactly 1 message
+                        '-w', '1', # Wait until at least 1 subscriber is connected
+                        '/waveshare_velocity_controller/commands', 
+                        'std_msgs/msg/Float64MultiArray', 
+                        '{data: [1.0, 1.0]}'
+                    ],
+                    output='screen'
+                )
+            ]
+        ),
+        TimerAction(
+            period=10.0,  
+            actions=[
+                ExecuteProcess(
+                    cmd=[
+                        'ros2', 'topic', 'pub', '--once', 
+                        '/arm_controller/commands', 
+                        'std_msgs/msg/Float64MultiArray', 
+                        '{data: [0.0, 0.0, 0.0, 0.0, 0.0]}'
+                    ],
+                    output='screen'
                 )
             ]
         ),

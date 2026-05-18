@@ -251,7 +251,7 @@ hardware_interface::CallbackReturn WaveshareHardwareInterface::on_configure(
 	for (u8 i = 0; i < pos_ids_.size(); i++)
 	{
 		sm_st.Mode(pos_ids_[i], 0); 
-		p_acc_ar_[i] = 1; // smoother motion with no acceleration
+		p_acc_ar_[i] = 0; // smoother motion with no acceleration
 	}
 	for (u8 i = 0; i < vel_ids_.size(); i++)
 	{
@@ -368,6 +368,7 @@ hardware_interface::return_type WaveshareHardwareInterface::write(
         // p_vel_ar_[i] = (vel_cmds_[pos_is_[i]] * steps_) / (2 * M_PI); // 
         double motor_target_vel_rad_s = vel_cmds_[joint_idx] * gear_ratios_[joint_idx]; //
         p_vel_ar_[i] = (motor_target_vel_rad_s * steps_) / (2 * M_PI); //
+		//p_vel_ar_[i] = 2400;
     }
     for (size_t i = 0; i < vel_is_.size(); i++)
     {

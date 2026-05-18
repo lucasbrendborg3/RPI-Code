@@ -58,10 +58,6 @@
           <origin xyz="0 0 0.05" rpy="0 0 0"/>
           <material name="grey"/>
       </visual>
-      <collision>
-          <geometry><box size="0.02 0.1 0.02"/></geometry>
-          <origin xyz="0 0 0.05" rpy="0 0 0"/>
-      </collision>
   </link>
   
   <joint name="joint1" type="revolute">
@@ -89,9 +85,9 @@
   </joint>
   
   <joint name="joint4" type="revolute">
-    <parent link="base_link"/>
+    <parent link="odrive_link_3"/>
     <child link="servo_link_1"/>
-    <origin xyz="0 0.1 0.1"/>
+    <origin xyz="0 0 0.3"/>
     <axis xyz="0 0 1"/>
     <limit effort="1" lower="-2.09" upper="2.09" velocity="1"/> 
   </joint>
@@ -113,4 +109,5 @@
   </joint>
 
   <xacro:arm_control/>
+  
 </robot>
