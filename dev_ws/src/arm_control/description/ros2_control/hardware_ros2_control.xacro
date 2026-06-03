@@ -27,7 +27,7 @@
       <joint name="joint2">
         <param name="node_id">1</param>
         <param name="type">pos</param>
-        <param name="gear_ratio">304.6</param>  <!-- Match main PC gear ratio  prev. ratio 295.00 -->
+        <param name="gear_ratio">303.5</param>  <!-- Match main PC gear ratio  prev. ratio 295.00 -->
         <command_interface name="position">
           <param name="min">-0.897</param>  <!-- Match main PC limits -->
           <param name="max">1.92</param>
@@ -40,7 +40,7 @@
       <joint name="joint3">
         <param name="node_id">2</param>
         <param name="type">pos</param>
-        <param name="gear_ratio">198.0</param>  <!-- Match main PC gear ratio -->
+        <param name="gear_ratio">194.3</param>  <!-- Match main PC gear ratio -->
         <command_interface name="position">
           <param name="min">-1.83</param>  <!-- Match main PC limits -->
           <param name="max">1.83</param>
