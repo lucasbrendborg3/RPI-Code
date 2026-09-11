@@ -1,4 +1,10 @@
-controller_manager:
+# NOTE: top-level keys are fully-qualified (/arm/...) rather than bare names.
+# ros2_control_node and its internally-spawned controller nodes are launched
+# with namespace='arm' (see arm.launch.py) so they resolve to /arm/<name>.
+# A bare "controller_manager:" key does NOT match a namespaced node — ROS 2
+# parameter YAML matching requires either the fully-qualified name or a /**
+# wildcard, and a mismatched key silently loads no parameters (verified).
+/arm/controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
 
@@ -15,7 +21,7 @@ controller_manager:
       type: forward_command_controller/ForwardCommandController
 
 # Joint state broadcaster - no parameters needed
-joint_state_broadcaster:
+/arm/joint_state_broadcaster:
   ros__parameters:
 
 #ADD BACK JOINTS HERE if it fails to start
@@ -26,8 +32,8 @@ joint_state_broadcaster:
       - joint4  # Waveshare joints (3-5)
       - joint5
       - gripper1  # Gripper joint
-    
-arm_controller:
+
+/arm/arm_controller:
   ros__parameters:
     joints:
       - joint1  # ODrive joints (0-2)
@@ -38,7 +44,7 @@ arm_controller:
 
     interface_name: position
 
-waveshare_velocity_controller:
+/arm/waveshare_velocity_controller:
   ros__parameters:
     joints:
       - joint4  # We only apply this to the Waveshare servos
@@ -46,7 +52,7 @@ waveshare_velocity_controller:
     interface_name: velocity
 
 # GRIPPER CONTROLLER - matches main PC exactly
-gripper_action_controller:
+/arm/gripper_action_controller:
   ros__parameters:
     joint: gripper1
     action_monitor_rate: 20.0  # 20Hz as requested

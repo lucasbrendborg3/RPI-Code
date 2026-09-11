@@ -152,9 +152,13 @@ This starts:
 
 ## Monitoring
 
+Everything ros2_control-related is namespaced under `/arm` (see `arm.launch.py`
+and `ros2_controllers_hw.yaml`) so it doesn't collide with kridtbot rover
+topics when both run on the same ROS domain (Mini PC integration).
+
 ```bash
 # Monitor joint states
-ros2 topic echo /joint_states
+ros2 topic echo /arm/joint_states
 
 # Check active nodes
 ros2 node list
@@ -163,19 +167,19 @@ ros2 node list
 ros2 topic list -v
 
 # Check controller status
-ros2 service call /controller_manager/list_controllers ros2controlcmds/srv/ListControllers
+ros2 control list_controllers --controller-manager /arm/controller_manager
 ```
 
 ## Sending Commands
 
 Move ODrive motor (Joint 1):
 ```bash
-ros2 topic pub /arm_controller/commands std_msgs/Float64MultiArray "data: [0.5, 0.0, 0.0, 0.0, 0.0]"
+ros2 topic pub /arm/arm_controller/commands std_msgs/Float64MultiArray "data: [0.5, 0.0, 0.0, 0.0, 0.0]"
 ```
 
 Control gripper:
 ```bash
-ros2 action send_goal /gripper_action_controller/gripper_cmd control_msgs/action/GripperCommand \
+ros2 action send_goal /arm/gripper_action_controller/gripper_cmd control_msgs/action/GripperCommand \
   "{command: {position: 0.0, max_effort: 2.0}}"
 ```
 
@@ -185,12 +189,13 @@ Test individual nodes:
 ros2 run load_cell load_cell_node
 ros2 topic echo /weight
 
-# TOF sensor
-ros2 run tof_sensor tof_sensor_node
-ros2 topic echo /range
+# TOF sensor (note: executable is 'tof_node', not 'tof_sensor_node')
+ros2 run tof_sensor tof_node
+ros2 topic echo /arm/range
 
-# Gripper
-ros2 run gripper_controller gripper_translator_node
+# Gripper (note: executable is 'gripper_controller', not 'gripper_translator_node';
+# subscribes on /arm/gripper_open_close_cmd once launched via arm.launch.py's remap)
+ros2 run gripper_controller gripper_controller
 ```
 
 ## Configuration

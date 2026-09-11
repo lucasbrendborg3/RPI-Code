@@ -43,10 +43,15 @@ def generate_launch_description():
     #     'config', 'pi_controllers.yaml'
     # ])
 
-    # Control node
+    # Namespaced 'arm' to match arm.launch.py and ros2_controllers_hw.yaml,
+    # whose top-level keys are now fully-qualified /arm/... (a bare
+    # "controller_manager:" key silently fails to match a namespaced node --
+    # verified empirically -- so this file would otherwise load with no
+    # controller parameters at all).
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
+        namespace="arm",
         parameters=[robot_description, controller_config],
         output="both",
     )
@@ -55,6 +60,7 @@ def generate_launch_description():
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
+        namespace="arm",
         output="both",
         parameters=[robot_description],
     )
@@ -63,19 +69,19 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        arguments=["joint_state_broadcaster", "--controller-manager", "/arm/controller_manager"],
     )
 
     arm_controller_spawner = Node(
-        package="controller_manager", 
+        package="controller_manager",
         executable="spawner",
-        arguments=["arm_controller", "--controller-manager", "/controller_manager"],
+        arguments=["arm_controller", "--controller-manager", "/arm/controller_manager"],
     )
 
     gripper_controller_spawner = Node(
         package="controller_manager",
-        executable="spawner", 
-        arguments=["gripper_action_controller", "--controller-manager", "/controller_manager"],
+        executable="spawner",
+        arguments=["gripper_action_controller", "--controller-manager", "/arm/controller_manager"],
     )
 
     return LaunchDescription([

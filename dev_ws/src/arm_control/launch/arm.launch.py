@@ -34,9 +34,15 @@ def generate_launch_description():
         #    arguments=['0', '0', '0', '0', '0', '0', 'world', 'base_link']
         #),
         
+        # Namespaced 'arm' so this doesn't collide with kridtbot's own
+        # controller_manager/joint_states/robot_description when both run on
+        # the same ROS domain. namespace= is a process-wide default, so it
+        # also relocates every controller ros2_control spawns internally
+        # (e.g. arm_controller/commands -> /arm/arm_controller/commands).
         Node(
             package="controller_manager",
             executable="ros2_control_node",
+            namespace="arm",
             parameters=[
                 {"robot_description": robot_description_content},
                 robot_controllers,
@@ -44,11 +50,12 @@ def generate_launch_description():
             ],
             output="screen",
         ),
-        
+
         # Robot State Publisher (publishes TF and robot description)
         Node(
             package="robot_state_publisher",
             executable="robot_state_publisher",
+            namespace="arm",
             output="screen",
             parameters=[
                 {"robot_description": robot_description_content},
@@ -59,15 +66,15 @@ def generate_launch_description():
                 ('/tf_static', '/pi_internal/tf_static')
             ]
         ),
-        
+
         # Joint State Broadcaster (immediate start)
         Node(
             package="controller_manager",
             executable="spawner",
-            arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+            arguments=["joint_state_broadcaster", "--controller-manager", "/arm/controller_manager"],
             output="screen",
         ),
-        
+
         # Arm Controller (delayed start to ensure hardware initialization)
         TimerAction(
             period=2.5,  # Delay for hardware ready
@@ -75,7 +82,7 @@ def generate_launch_description():
                 Node(
                     package="controller_manager",
                     executable="spawner",
-                    arguments=["arm_controller", "--controller-manager", "/controller_manager"],
+                    arguments=["arm_controller", "--controller-manager", "/arm/controller_manager"],
                     output="screen",
                 )
             ]
@@ -87,12 +94,12 @@ def generate_launch_description():
                 Node(
                     package="controller_manager",
                     executable="spawner",
-                    arguments=["waveshare_velocity_controller", "--controller-manager", "/controller_manager"],
+                    arguments=["waveshare_velocity_controller", "--controller-manager", "/arm/controller_manager"],
                     output="screen",
                 )
             ]
         ),
-        
+
         # Gripper Controller (delayed start after arm controller)
         TimerAction(
             period=4.0,  # Delay after arm controller
@@ -100,19 +107,20 @@ def generate_launch_description():
                 Node(
                     package="controller_manager",
                     executable="spawner",
-                    arguments=["gripper_action_controller", "--controller-manager", "/controller_manager"],
+                    arguments=["gripper_action_controller", "--controller-manager", "/arm/controller_manager"],
                     output="screen",
                 ),
             ]
-       ), 
+       ),
 
         TimerAction(
-            period=4.5,  
+            period=4.5,
             actions=[
                 Node(
                     package="tof_sensor",
                     executable="tof_node",
                     output="screen",
+                    remappings=[('/range', '/arm/range')],
                 ),
             ]
         ),
@@ -123,19 +131,23 @@ def generate_launch_description():
                     package="gripper_controller",
                     executable="gripper_controller",
                     output="screen",
+                    remappings=[
+                        ('/gripper_action_controller/gripper_cmd', '/arm/gripper_action_controller/gripper_cmd'),
+                        ('/gripper_open_close_cmd', '/arm/gripper_open_close_cmd'),
+                    ],
                 ),
             ]
         ),
         TimerAction(
-            period=9.5,  
+            period=9.5,
             actions=[
                 ExecuteProcess(
                     cmd=[
-                        'ros2', 'topic', 'pub', 
+                        'ros2', 'topic', 'pub',
                         '-1',     # Publish exactly 1 message
                         '-w', '1', # Wait until at least 1 subscriber is connected
-                        '/waveshare_velocity_controller/commands', 
-                        'std_msgs/msg/Float64MultiArray', 
+                        '/arm/waveshare_velocity_controller/commands',
+                        'std_msgs/msg/Float64MultiArray',
                         '{data: [1.0, 1.0]}'
                     ],
                     output='screen'
@@ -143,13 +155,13 @@ def generate_launch_description():
             ]
         ),
         TimerAction(
-            period=10.0,  
+            period=10.0,
             actions=[
                 ExecuteProcess(
                     cmd=[
-                        'ros2', 'topic', 'pub', '--once', 
-                        '/arm_controller/commands', 
-                        'std_msgs/msg/Float64MultiArray', 
+                        'ros2', 'topic', 'pub', '--once',
+                        '/arm/arm_controller/commands',
+                        'std_msgs/msg/Float64MultiArray',
                         '{data: [0.0, 0.0, 0.0, 0.0, 0.0]}'
                     ],
                     output='screen'
