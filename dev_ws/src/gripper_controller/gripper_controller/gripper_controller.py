@@ -10,7 +10,7 @@ class GripperTranslatorNode(Node):
         
         # --- Configuration (Matches your URDF) ---
         self.OPEN_POSITION = 0.52 
-        self.CLOSED_POSITION = -0.35 
+        self.CLOSED_POSITION = -0.65  # -0.35 
         self.MAX_EFFORT = 0.0
         
         # 1. The Action Client (Talks to the physical gripper)
