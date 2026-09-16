@@ -130,11 +130,8 @@ def generate_launch_description():
                 Node(
                     package="gripper_controller",
                     executable="gripper_controller",
+                    namespace="arm",
                     output="screen",
-                    remappings=[
-                        ('/gripper_action_controller/gripper_cmd', '/arm/gripper_action_controller/gripper_cmd'),
-                        ('/gripper_open_close_cmd', '/arm/gripper_open_close_cmd'),
-                    ],
                 ),
             ]
         ),

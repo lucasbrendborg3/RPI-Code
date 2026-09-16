@@ -193,9 +193,9 @@ ros2 topic echo /weight
 ros2 run tof_sensor tof_node
 ros2 topic echo /arm/range
 
-# Gripper (note: executable is 'gripper_controller', not 'gripper_translator_node';
-# subscribes on /arm/gripper_open_close_cmd once launched via arm.launch.py's remap)
-ros2 run gripper_controller gripper_controller
+# Gripper (note: executable is 'gripper_controller', not 'gripper_translator_node').
+# arm.launch.py runs it in the 'arm' namespace; to match that when running it by hand:
+ros2 run gripper_controller gripper_controller --ros-args -r __ns:=/arm
 ```
 
 ## Configuration

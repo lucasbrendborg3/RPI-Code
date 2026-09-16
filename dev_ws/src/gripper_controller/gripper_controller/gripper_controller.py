@@ -13,17 +13,20 @@ class GripperTranslatorNode(Node):
         self.CLOSED_POSITION = -0.65  # -0.35 
         self.MAX_EFFORT = 0.0
         
+        # Names are relative (no leading slash) so the node's namespace applies,
+        # e.g. /arm/... under arm.launch.py. A launch remap did not reach the
+        # action client on the Pi, but namespacing does.
         # 1. The Action Client (Talks to the physical gripper)
         self.gripper_client = ActionClient(
-            self, 
-            GripperCommand, 
-            '/gripper_action_controller/gripper_cmd'
+            self,
+            GripperCommand,
+            'gripper_action_controller/gripper_cmd'
         )
-        
+
         # 2. The Subscriber (Listens for your text commands)
         self.command_sub = self.create_subscription(
-            String, 
-            '/gripper_open_close_cmd', 
+            String,
+            'gripper_open_close_cmd',
             self.command_callback, 
             10
         )
